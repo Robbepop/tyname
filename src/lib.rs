@@ -192,8 +192,8 @@ impl_ptrref_signature_hash!("*const ", *const);
 impl_ptrref_signature_hash!("*mut ", *mut);
 
 macro_rules! impl_smartptr_signature_hash {
-	( $ty:ident, $repr:expr ) => {
-		impl<T> TypeName for $ty<T>
+	( $head:ident $(:: $seg:ident)* , $repr:expr ) => {
+		impl<T> TypeName for $head $(:: $seg)* <T>
 		where
 			T: TypeName + ?Sized
 		{
@@ -207,15 +207,13 @@ macro_rules! impl_smartptr_signature_hash {
 	}
 }
 
-use std::{ rc::Rc, sync::Arc };
-
 impl_smartptr_signature_hash!(Box, "Box");
-impl_smartptr_signature_hash!(Rc, "Rc");
-impl_smartptr_signature_hash!(Arc, "Arc");
+impl_smartptr_signature_hash!(std::rc::Rc, "Rc");
+impl_smartptr_signature_hash!(std::sync::Arc, "Arc");
 
 macro_rules! impl_collections_signature_hash {
-	( $ty:ident, $repr:expr ) => {
-		impl<T> TypeName for $ty<T>
+	( $head:ident $(:: $seg:ident)* , $repr:expr ) => {
+		impl<T> TypeName for $head $(:: $seg)* <T>
 		where
 			T: TypeName
 		{
@@ -229,12 +227,10 @@ macro_rules! impl_collections_signature_hash {
 	}
 }
 
-use std::collections::{VecDeque, LinkedList};
-
 impl_collections_signature_hash!( Option, "Option" );
 impl_collections_signature_hash!( Vec, "Vec" );
-impl_collections_signature_hash!( VecDeque, "VecDeque" );
-impl_collections_signature_hash!( LinkedList, "LinkedList" );
+impl_collections_signature_hash!( std::collections::VecDeque, "VecDeque" );
+impl_collections_signature_hash!( std::collections::LinkedList, "LinkedList" );
 
 impl<T, E> TypeName for std::result::Result<T, E>
 where
