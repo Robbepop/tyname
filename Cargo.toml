@@ -3,6 +3,10 @@ name = "tyname"
 version = "0.1.0"
 authors = ["Robin Freyler <robbepop@web.de>"]
 edition = "2018"
+license = "MIT/Apache-2.0"
+
+keywords = ["typename", "name", "type"]
+categories = ["rust-patterns", "value-formatting"]
 
 homepage = "https://github.com/robbepop/tyname"
 repository = "https://github.com/robbepop/tyname"
