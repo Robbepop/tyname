@@ -1,4 +1,6 @@
-/// Retrieve type names during program execution on **stable** Rust.
+//! Retrieve type names during program execution on **stable** Rust.
+
+#![doc(html_root_url = "https://docs.rs/crate/tyname/0.1.0")]
 
 #[cfg(test)]
 mod tests;
