@@ -5,10 +5,13 @@ mod tests;
 
 use std::fmt::Write;
 
+/// The result type for this crate.
+pub type Result = std::fmt::Result;
+
 /// Types that implement this trait can write their name.
 pub trait TypeName {
 	/// Applies the keccak hash of `self` for the given keccak hasher.
-	fn write_type_name<W>(writer: &mut W) -> std::fmt::Result
+	fn write_type_name<W>(writer: &mut W) -> Result
 	where
 		W: Write;
 }
@@ -27,7 +30,7 @@ macro_rules! impl_tuple_signature_hash {
 	// Specialization for the unit type (void)
 	( ) => {
 		impl TypeName for () {
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str("()")
 			}
 		}
@@ -38,7 +41,7 @@ macro_rules! impl_tuple_signature_hash {
 		where
 			$head: TypeName,
 		{
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str("(")?;
 				$head::write_type_name(w)?;
 				// Comma needed here to differentiate between
@@ -56,7 +59,7 @@ macro_rules! impl_tuple_signature_hash {
 			$head: TypeName,
 			$( $tail: TypeName, )*
 		{
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str("(")?;
 				$head::write_type_name(w)?;
 				$(
@@ -91,7 +94,7 @@ macro_rules! impl_fn_signature_hash {
 		where
 			$ret: TypeName
 		{
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str("fn() -> ")?;
 				$ret::write_type_name(w)
 			}
@@ -105,7 +108,7 @@ macro_rules! impl_fn_signature_hash {
 			$head: TypeName,
 			$( $tail: TypeName, )*
 		{
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str("fn(")?;
 				$head::write_type_name(w)?;
 				$(
@@ -133,7 +136,7 @@ macro_rules! impl_array_signature_hash {
 			where
 				T: TypeName
 			{
-				fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+				fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 					w.write_str("[")?;
 					T::write_type_name(w)?;
 					w.write_str("; ")?;
@@ -161,7 +164,7 @@ impl<T> TypeName for [T]
 where
 	T: TypeName
 {
-	fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+	fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 		w.write_str("[")?;
 		T::write_type_name(w)?;
 		w.write_str("]")
@@ -175,7 +178,7 @@ macro_rules! impl_ptrref_signature_hash {
 		where
 			T: TypeName + ?Sized
 		{
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str($prefix)?;
 				T::write_type_name(w)
 			}
@@ -194,7 +197,7 @@ macro_rules! impl_smartptr_signature_hash {
 		where
 			T: TypeName + ?Sized
 		{
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str($repr)?;
 				w.write_str("<")?;
 				T::write_type_name(w)?;
@@ -216,7 +219,7 @@ macro_rules! impl_collections_signature_hash {
 		where
 			T: TypeName
 		{
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str($repr)?;
 				w.write_str("<")?;
 				T::write_type_name(w)?;
@@ -238,7 +241,7 @@ where
 	T: TypeName,
 	E: TypeName,
 {
-	fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+	fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 		w.write_str("Result<")?;
 		T::write_type_name(w)?;
 		w.write_str(", ")?;
@@ -251,7 +254,7 @@ impl<'a, B> TypeName for std::borrow::Cow<'a, B>
 where
 	B: 'a + ToOwned + ?Sized + TypeName
 {
-	fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+	fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 		w.write_str("Cow<")?;
 		B::write_type_name(w)?;
 		w.write_str(">")
@@ -261,7 +264,7 @@ where
 macro_rules! impl_naive_signature_hash {
 	( $ty:ident, $repr:expr ) => {
 		impl TypeName for $ty {
-			fn write_type_name<W>(w: &mut W) -> std::fmt::Result where W: Write {
+			fn write_type_name<W>(w: &mut W) -> Result where W: Write {
 				w.write_str($repr)
 			}
 		}
