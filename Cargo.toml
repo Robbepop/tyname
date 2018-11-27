@@ -1,0 +1,11 @@
+[package]
+name = "tyname"
+version = "0.1.0"
+authors = ["Robin Freyler <robbepop@web.de>"]
+edition = "2018"
+
+homepage = "https://github.com/robbepop/tyname"
+repository = "https://github.com/robbepop/tyname"
+description = "Retrieve type names during program execution on stable Rust."
+documentation = "https://docs.rs/tyname/"
+readme = ".README"
