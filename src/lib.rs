@@ -22,7 +22,8 @@ where
 	T: TypeName + ?Sized
 {
 	let mut buffer = String::new();
-	T::write_type_name(&mut buffer).unwrap();
+	T::write_type_name(&mut buffer)
+		.expect("[tyname::type_name] Encountered error while writing type name");
 	buffer
 }
 
