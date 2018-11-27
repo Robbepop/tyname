@@ -1,4 +1,4 @@
-# ty_name - Type names on stable Rust
+# tyname - Type names on stable Rust
 
 **WORKS ON STABLE RUST**
 
