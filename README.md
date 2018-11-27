@@ -1,5 +1,14 @@
 # tyname - Type names on stable Rust
 
+|       Docs       |       Crates.io      |
+|:----------------:|:--------------------:|
+| [![docs][0]][1]   | [![crates][2]][3] |
+
+[0]:  https://docs.rs/tyname/badge.svg
+[1]: https://docs.rs/tyname
+[2]: https://img.shields.io/crates/v/tyname.svg
+[3]: https://crates.io/crates/tyname
+
 **WORKS ON STABLE RUST**
 
 Retrieve type names during program execution on **stable** Rust.
@@ -42,8 +51,14 @@ assert_eq!(
 Works on function pointer types.
 
 ```rust
-assert_eq!(type_name::<fn(i32, f32) -> bool>(), String::from("fn(i32, f32) -> bool"));
-assert_eq!(type_name::<fn()>(), String::from("fn() -> ()"));
+assert_eq!(
+	type_name::<fn(i32, f32) -> bool>(),
+	String::from("fn(i32, f32) -> bool")
+);
+assert_eq!(
+	type_name::<fn()>(),
+	String::from("fn() -> ()")
+);
 ```
 
 ### Implement
@@ -53,16 +68,14 @@ Every type that implements it can be used.
 This library already implements the most common types for the users
 
 Users can implement it manually for their own types, too.
-Note: A derive functionality is planned but not yet crafted.
+
+**Note:** A derive functionality is planned but not yet crafted.
 
 ```rust
 /// The type we want to make work for the `TypeName` trait
 struct Foo<T1, T2> { a: T1, b: T2 }
 
 /// The manual implementation.
-/// 
-/// Note again: A derive functionality is the better approach
-///             but not yet realized for this crate!
 impl<T1, T2> crate::TypeName for Foo<T1, T2>
 where
 	T1: TypeName,
